@@ -8,9 +8,11 @@ package br.com.wscompany.servicos;
 import br.com.wscompany.daos.CervejaDao;
 import br.com.wscompany.modelos.Cerveja;
 import com.google.gson.Gson;
+import java.util.LinkedList;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -55,6 +57,25 @@ public class CervejaService {
             Cerveja cerveja = c_dao.buscaCervejaPorCodgio(codigo_cerveja);
 
             String json_cerveja = new Gson().toJson(cerveja);
+
+            return Response.status(Response.Status.OK).entity(json_cerveja).build();
+
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
+
+    }
+    
+     @GET()
+    @Path("/buscar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCerveja(@QueryParam("importada") boolean isImportada) {
+
+        try {
+           
+            LinkedList<Cerveja> cervejas_especificas = c_dao.retornaCervejasPorImportacao(isImportada);
+
+            String json_cerveja = new Gson().toJson(cervejas_especificas);
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 
