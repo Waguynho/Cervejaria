@@ -8,7 +8,7 @@ package br.com.wscompany.servicos;
 import br.com.wscompany.modelos.Cerveja;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,72 +17,79 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 /**
  *
  * @author Wagner
  */
 @Path("cervejas")
 public class CervejaService {
-    
+
     private List<Cerveja> cervejas;
-    
-    public CervejaService(){
-    iniciaEstoqueCervejas();
+
+    public CervejaService() {
+        iniciaEstoqueCervejas();
     }
-    
-    @GET 
-    @Produces(MediaType.APPLICATION_JSON) 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getCervejas() {
-    
-        try {           
-            
-            
+
+        try {
+
             String json_cervejas = new Gson().toJson(cervejas);
-            
+
             return Response.status(Response.Status.OK).entity(json_cervejas).build();
-            
+
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        
+
     }
-    
-    @GET() 
-    @Path("/{id_ano}")
-    @Produces(MediaType.APPLICATION_JSON) 
-    public Response getCerveja(@PathParam("/{id_ano}") int id_ano) {
-    
-        try {           
-            iniciaEstoqueCervejas();
-            String json_cerveja = "";
+
+    @GET()
+    @Path("{id_ano}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCerveja(@PathParam("id_ano") int id_ano) {
+
+        try {
+            String json_cerveja = "vazio";
             
-            for (Cerveja cerveja : cervejas) {
+            iniciaEstoqueCervejas();
+            
+            Cerveja teste = new Cerveja(99, "Deu Certo", Boolean.TRUE);
+            
+            if (teste.getAno() == id_ano) {
                 
-                if (cerveja.getAno() == id_ano) {
-                    json_cerveja = new Gson().toJson(cerveja);
+                 json_cerveja = json_cerveja = new Gson().toJson(cervejas);
+            }
+            
+
+            for (int i = 0; i < cervejas.size(); i++) {
+
+                if (cervejas.get(i).getAno() == id_ano) {
+                    
+                    json_cerveja = new Gson().toJson(cervejas.get(i));
+                    
                     break;
                 }
             }
-            
+
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
-            
+
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(404).build();
         }
-        
+
     }
-    
-    private void iniciaEstoqueCervejas(){
-    
+
+    private void iniciaEstoqueCervejas() {
+
         cervejas = new ArrayList<Cerveja>();
-        
+
         cervejas.add(new Cerveja(2004, "Heinkg", true));
         cervejas.add(new Cerveja(1968, "Stella", false));
         cervejas.add(new Cerveja(1997, "Humbrela", true));
-    
+
     }
-    
+
 }
-
-

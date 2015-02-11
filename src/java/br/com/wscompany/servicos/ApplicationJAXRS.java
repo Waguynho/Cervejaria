@@ -18,6 +18,8 @@ public class ApplicationJAXRS extends Application{
     @Override public Set<Class<?>> getClasses() { 
         
     Set<Class<?>> classes = new HashSet<>();
-    classes.add(CervejaService.class); return classes; }
+    classes.add(CervejaService.class); 
+    return classes; 
+    }
     
 }
