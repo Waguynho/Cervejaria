@@ -10,10 +10,12 @@ import br.com.wscompany.modelos.Cerveja;
 import com.google.gson.Gson;
 import java.util.LinkedList;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,11 +26,27 @@ import javax.ws.rs.core.Response;
 @Path("cervejas")
 public class CervejaService {
 
-    private CervejaDao c_dao;
+    private  final CervejaDao c_dao;
 
     public CervejaService() {
 
         c_dao = new CervejaDao();
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response criarCerveja(String str_cerveja){
+     try {
+
+            Cerveja cerveja_nova  = new Gson().fromJson(str_cerveja, Cerveja.class);
+            
+            c_dao.criarCerveja(cerveja_nova);
+
+            return Response.status(201).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GET
@@ -53,7 +71,7 @@ public class CervejaService {
     public Response getCerveja(@PathParam("codigo") int codigo_cerveja) {
 
         try {
-           
+
             Cerveja cerveja = c_dao.buscaCervejaPorCodgio(codigo_cerveja);
 
             String json_cerveja = new Gson().toJson(cerveja);
@@ -65,14 +83,14 @@ public class CervejaService {
         }
 
     }
-    
-     @GET()
+
+    @GET()
     @Path("/buscar")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCerveja(@QueryParam("importada") boolean isImportada) {
 
         try {
-           
+
             LinkedList<Cerveja> cervejas_especificas = c_dao.retornaCervejasPorImportacao(isImportada);
 
             String json_cerveja = new Gson().toJson(cervejas_especificas);

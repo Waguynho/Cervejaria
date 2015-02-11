@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CervejaDao {
 
-    private List<Cerveja> cervejas;
+    private static List<Cerveja> cervejas;
 
     public CervejaDao() {
 
@@ -28,6 +28,11 @@ public class CervejaDao {
     public List<Cerveja> listarCervejas() {
 
         return this.cervejas;
+    }
+    
+    public void criarCerveja(Cerveja cerveja_nova){
+    
+        cervejas.add(cerveja_nova);
     }
 
     public Cerveja buscaCervejaPorCodgio(int codigo) {
