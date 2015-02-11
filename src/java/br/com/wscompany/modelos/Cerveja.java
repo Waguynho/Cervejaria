@@ -11,27 +11,27 @@ package br.com.wscompany.modelos;
  */
 public class Cerveja {
 
-    private int ano;
+    private int codigo;
     private String nome;
     private boolean importada;
 
-    public Cerveja(int ano, String nome, Boolean importada) {
-        this.ano = ano;
+    public Cerveja(int codigo_cerveja, String nome, Boolean importada) {
+        this.codigo = codigo_cerveja;
         this.nome = nome;
         this.importada = importada;
     }
     /**
-     * @return the ano
+     * @return the codigo_cerveja
      */
-    public int getAno() {
-        return ano;
+    public int getCodigo() {
+        return codigo;
     }
 
     /**
-     * @param ano the ano to set
+     * @param ano the codigo_cerveja to set
      */
     public void setAno(int ano) {
-        this.ano = ano;
+        this.codigo = ano;
     }
 
     /**
