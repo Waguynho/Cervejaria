@@ -26,20 +26,20 @@ import javax.ws.rs.core.Response;
 @Path("cervejas")
 public class CervejaService {
 
-    private  final CervejaDao c_dao;
+    private final CervejaDao c_dao;
 
     public CervejaService() {
 
         c_dao = new CervejaDao();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response criarCerveja(String str_cerveja){
-     try {
+    public Response criarCerveja(String str_cerveja) {
+        try {
 
-            Cerveja cerveja_nova  = new Gson().fromJson(str_cerveja, Cerveja.class);
-            
+            Cerveja cerveja_nova = new Gson().fromJson(str_cerveja, Cerveja.class);
+
             c_dao.criarCerveja(cerveja_nova);
 
             return Response.status(201).build();
@@ -100,7 +100,22 @@ public class CervejaService {
         } catch (Exception e) {
             return Response.status(404).build();
         }
+    }
 
+    @GET()
+    @Path("/teste")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCerveja(@QueryParam("nome") String nome, @QueryParam("idade") int idade) {
+
+        try {
+
+            String json_cerveja = new Gson().toJson(nome + " tem idade " + idade);
+
+            return Response.status(Response.Status.OK).entity(json_cerveja).build();
+
+        } catch (Exception e) {
+            return Response.status(404).build();
+        }
     }
 
 }
