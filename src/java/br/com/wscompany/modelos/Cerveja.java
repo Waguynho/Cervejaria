@@ -31,7 +31,7 @@ public class Cerveja {
      * @param ano the codigo_cerveja to set
      */
     public void setAno(int ano) {
-        this.codigo = ano;
+        this.setCodigo(ano);
     }
 
     /**
@@ -50,6 +50,10 @@ public class Cerveja {
 
     public int getAno() {
         return ano;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
     }
 
     

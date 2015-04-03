@@ -18,6 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -51,13 +52,32 @@ public class CervejaService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
     }
-    
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response alteraCerveja( @PathParam("id") int id ,String str_cerveja) {
+        try {
+            
+             Cerveja cerveja_update = new Gson().fromJson(str_cerveja, Cerveja.class);
+             
+             cerveja_update.setCodigo(id);
+             
+             c_dao.alterarCerveja(cerveja_update);
+
+            return Response.ok().build();
+        } catch (Exception e) {
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+        }
+    }
+
     @DELETE
     @Path("/{id}")
     public Response deletarCerveja(@PathParam("id") int id) {
         try {
-           c_dao.deletarCerveja(id);
-           
+            c_dao.deletarCerveja(id);
+
             return Response.ok().build();
         } catch (Exception e) {
             String error_json = new Gson().toJson(new Problema(e.getMessage()));

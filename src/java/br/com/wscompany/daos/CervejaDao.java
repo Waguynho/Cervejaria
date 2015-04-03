@@ -95,6 +95,26 @@ public class CervejaDao {
         SingletonConexao.getInstance().desconecatar();
 
     }
+    
+       public void alterarCerveja(Cerveja cerveja_update) throws ClassNotFoundException, SQLException {
+
+        sql = "UPDATE cervejaria.cervejas SET nome = ?,  ano = ? WHERE cod = ?";
+
+        SingletonConexao.getInstance().conectar();
+
+        PreparedStatement prepared_statement = SingletonConexao.getInstance().getConexao().prepareStatement(sql);
+
+        prepared_statement.setString(1, cerveja_update.getNome());
+
+        prepared_statement.setInt(2, cerveja_update.getAno());
+        
+        prepared_statement.setInt(3, cerveja_update.getCodigo());
+
+        prepared_statement.execute();
+
+        SingletonConexao.getInstance().desconecatar();
+
+    }
 
     public Cerveja buscaCervejaPorCodgio(int codigo) throws ClassNotFoundException, SQLException {
 
