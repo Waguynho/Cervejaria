@@ -56,14 +56,14 @@ public class CervejaService {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response alteraCerveja( @PathParam("id") int id ,String str_cerveja) {
+    public Response alteraCerveja(@PathParam("id") int id, String str_cerveja) {
         try {
-            
-             Cerveja cerveja_update = new Gson().fromJson(str_cerveja, Cerveja.class);
-             
-             cerveja_update.setCodigo(id);
-             
-             c_dao.alterarCerveja(cerveja_update);
+
+            Cerveja cerveja_update = new Gson().fromJson(str_cerveja, Cerveja.class);
+
+            cerveja_update.setCodigo(id);
+
+            c_dao.alterarCerveja(cerveja_update);
 
             return Response.ok().build();
         } catch (Exception e) {
@@ -85,6 +85,27 @@ public class CervejaService {
         }
     }
 
+    @GET()
+    @Path("{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCervejaPorCodigo(@PathParam("codigo") int codigo_cerveja) {
+
+        try {
+
+            Cerveja cerveja = c_dao.buscaCervejaPorCodgio(codigo_cerveja);
+
+            String json_cerveja = new Gson().toJson(cerveja);
+
+            return Response.status(Response.Status.OK).entity(json_cerveja).build();
+
+        } catch (Exception e) {
+
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+        }
+
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCervejas() {
@@ -99,27 +120,6 @@ public class CervejaService {
 
             String error_json = new Gson().toJson(new Problema(se.getMessage()));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
-        } catch (Exception e) {
-
-            String error_json = new Gson().toJson(new Problema(e.getMessage()));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
-        }
-
-    }
-
-    @GET()
-    @Path("{codigo}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCervejaPorCodigo(@PathParam("codigo") int codigo_cerveja) {
-
-        try {
-
-            Cerveja cerveja = c_dao.buscaCervejaPorCodgio(codigo_cerveja);
-
-            String json_cerveja = new Gson().toJson(cerveja);
-
-            return Response.status(Response.Status.OK).entity(json_cerveja).build();
-
         } catch (Exception e) {
 
             String error_json = new Gson().toJson(new Problema(e.getMessage()));
@@ -149,6 +149,28 @@ public class CervejaService {
             if (isMaior) {
                 json_cerveja = new Gson().toJson(c_dao.listarCervejasPorAno(valor, CervejaDao.comparador_ano.MAIOR_QUE));
             }
+
+            return Response.status(Response.Status.OK).entity(json_cerveja).build();
+
+        } catch (SQLException se) {
+
+            String error_json = new Gson().toJson(new Problema(se.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+        } catch (Exception e) {
+
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+        }
+    }
+
+    @GET()
+    @Path("/importada")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCervejasPorAno(@QueryParam("valor") boolean isImportada) {
+
+        try {
+
+            String json_cerveja = new Gson().toJson(c_dao.listarCervejasPorImportacao(isImportada));
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 

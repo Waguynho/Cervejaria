@@ -19,6 +19,7 @@ import java.util.List;
 public class PreencheCerveja {
 
     private static List<Cerveja> cervejas;
+    
     private static PreparaResultSet prepara_rs;
 
     public static List<Cerveja> retornaCervejasPreenchidas(String sql) throws ClassNotFoundException, SQLException {
@@ -30,6 +31,8 @@ public class PreencheCerveja {
         while (rs.next()) {
 
             Cerveja nova_cerveja = new Cerveja(rs.getInt("cod"), rs.getString("nome"), rs.getInt("ano"));
+            
+            nova_cerveja.setImportada(rs.getBoolean("importada"));
 
             cervejas.add(nova_cerveja);
         }
@@ -47,6 +50,8 @@ public class PreencheCerveja {
         while (rs.next()) {
 
             Cerveja nova_cerveja = new Cerveja(rs.getInt("cod"), rs.getString("nome"), rs.getInt("ano"));
+            
+            nova_cerveja.setImportada(rs.getBoolean("importada"));
 
             return nova_cerveja;
         }

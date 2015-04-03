@@ -35,49 +35,6 @@ public class CervejaDao {
         }
     }
 
-    public List<Cerveja> listarCervejas() throws ClassNotFoundException, SQLException {
-
-        sql = "SELECT cod, nome, ano FROM cervejaria.cervejas";
-
-        return RetornaCervejas.getCervejas(sql);
-    }
-    
-     public void deletarCerveja(int id_cerveja) throws ClassNotFoundException, SQLException {
-
-        sql = "DELETE FROM cervejaria.cervejas where cod = ?";
-
-        SingletonConexao.getInstance().conectar();
-
-        PreparedStatement prepared_statement = SingletonConexao.getInstance().getConexao().prepareStatement(sql);
-
-        prepared_statement.setInt(1, id_cerveja);
-        
-        prepared_statement.execute();
-
-        SingletonConexao.getInstance().desconecatar();
-
-    }
-
-    public List<Cerveja> listarCervejasPorAno(int ano, comparador_ano comparador_selecionado) throws ClassNotFoundException, SQLException {
-
-        if (comparador_selecionado == comparador_ano.MENOR_QUE) {
-
-            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano < " + ano;
-        }
-
-        if (comparador_selecionado == comparador_ano.MAIOR_QUE) {
-
-            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano > " + ano;
-        }
-
-        if (comparador_selecionado == comparador_ano.IGUAL_QUE) {
-
-            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano = " + ano;
-        }
-
-        return RetornaCervejas.getCervejas(sql);
-    }
-
     public void criarCerveja(Cerveja cerveja_nova) throws ClassNotFoundException, SQLException {
 
         sql = "INSERT INTO cervejaria.cervejas (nome, ano) VALUES (?,?);";
@@ -95,8 +52,8 @@ public class CervejaDao {
         SingletonConexao.getInstance().desconecatar();
 
     }
-    
-       public void alterarCerveja(Cerveja cerveja_update) throws ClassNotFoundException, SQLException {
+
+    public void alterarCerveja(Cerveja cerveja_update) throws ClassNotFoundException, SQLException {
 
         sql = "UPDATE cervejaria.cervejas SET nome = ?,  ano = ? WHERE cod = ?";
 
@@ -107,8 +64,24 @@ public class CervejaDao {
         prepared_statement.setString(1, cerveja_update.getNome());
 
         prepared_statement.setInt(2, cerveja_update.getAno());
-        
+
         prepared_statement.setInt(3, cerveja_update.getCodigo());
+
+        prepared_statement.execute();
+
+        SingletonConexao.getInstance().desconecatar();
+
+    }
+
+    public void deletarCerveja(int id_cerveja) throws ClassNotFoundException, SQLException {
+
+        sql = "DELETE FROM cervejaria.cervejas where cod = ?";
+
+        SingletonConexao.getInstance().conectar();
+
+        PreparedStatement prepared_statement = SingletonConexao.getInstance().getConexao().prepareStatement(sql);
+
+        prepared_statement.setInt(1, id_cerveja);
 
         prepared_statement.execute();
 
@@ -118,9 +91,45 @@ public class CervejaDao {
 
     public Cerveja buscaCervejaPorCodgio(int codigo) throws ClassNotFoundException, SQLException {
 
-        sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE cod = " + codigo;
+        sql = "SELECT cod, nome, ano, importada FROM cervejaria.cervejas WHERE cod = " + codigo;
 
         return RetornaCervejas.getCervejaPorCodigo(sql);
+    }
+
+    public List<Cerveja> listarCervejas() throws ClassNotFoundException, SQLException {
+
+        sql = "SELECT cod, nome, ano, importada FROM cervejaria.cervejas";
+
+        return RetornaCervejas.getCervejas(sql);
+    }
+
+    public List<Cerveja> listarCervejasPorImportacao(boolean isImportada) throws ClassNotFoundException, SQLException {
+
+        sql = "SELECT cod, nome, ano, importada FROM cervejaria.cervejas WHERE importada = " + isImportada;
+
+        return RetornaCervejas.getCervejas(sql);
+    }
+
+    public List<Cerveja> listarCervejasPorAno(int ano, comparador_ano comparador_selecionado) throws ClassNotFoundException, SQLException {
+
+        sql = "SELECT cod, nome, ano, importada FROM cervejaria.cervejas WHERE ano ";
+
+        if (comparador_selecionado == comparador_ano.MENOR_QUE) {
+
+            sql += "<" + ano;
+        }
+
+        if (comparador_selecionado == comparador_ano.MAIOR_QUE) {
+
+            sql += ">" + ano;
+        }
+
+        if (comparador_selecionado == comparador_ano.IGUAL_QUE) {
+
+            sql += "=" + ano;
+        }
+
+        return RetornaCervejas.getCervejas(sql);
     }
 
 }

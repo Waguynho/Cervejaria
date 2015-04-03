@@ -14,6 +14,7 @@ public class Cerveja {
     private int codigo;
     private String nome;
     private int ano;
+    private boolean importada;
 
     public Cerveja(int codigo_cerveja, String nome, int ano) {
         this.codigo = codigo_cerveja;
@@ -54,6 +55,14 @@ public class Cerveja {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+
+    public boolean isImportada() {
+        return importada;
+    }
+
+    public void setImportada(boolean importada) {
+        this.importada = importada;
     }
 
     
