@@ -41,6 +41,22 @@ public class CervejaDao {
 
         return RetornaCervejas.getCervejas(sql);
     }
+    
+     public void deletarCerveja(int id_cerveja) throws ClassNotFoundException, SQLException {
+
+        sql = "DELETE FROM cervejaria.cervejas where cod = ?";
+
+        SingletonConexao.getInstance().conectar();
+
+        PreparedStatement prepared_statement = SingletonConexao.getInstance().getConexao().prepareStatement(sql);
+
+        prepared_statement.setInt(1, id_cerveja);
+        
+        prepared_statement.execute();
+
+        SingletonConexao.getInstance().desconecatar();
+
+    }
 
     public List<Cerveja> listarCervejasPorAno(int ano, comparador_ano comparador_selecionado) throws ClassNotFoundException, SQLException {
 
