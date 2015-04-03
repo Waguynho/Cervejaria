@@ -46,7 +46,8 @@ public class CervejaService {
             return Response.status(201).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
     }
 
@@ -85,7 +86,7 @@ public class CervejaService {
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             String error_json = new Gson().toJson(new Problema(e.getMessage()));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();

@@ -5,10 +5,10 @@
  */
 package br.com.wscompany.daos;
 
-
 import br.com.wscompany.modelos.Cerveja;
 import br.com.wscompany.utilitarias.PreparaResultSet;
 import br.com.wscompany.utilitarias.RetornaCervejas;
+import java.sql.PreparedStatement;
 import java.util.LinkedList;
 import java.util.List;
 import java.sql.SQLException;
@@ -62,9 +62,22 @@ public class CervejaDao {
         return RetornaCervejas.getCervejas(sql);
     }
 
-    public void criarCerveja(Cerveja cerveja_nova) {
+    public void criarCerveja(Cerveja cerveja_nova) throws ClassNotFoundException, SQLException {
 
-        cervejas.add(cerveja_nova);
+        sql = "INSERT INTO cervejaria.cervejas (nome, ano) VALUES (?,?);";
+
+        SingletonConexao.getInstance().conectar();
+
+        PreparedStatement prepared_statement = SingletonConexao.getInstance().getConexao().prepareStatement(sql);
+
+        prepared_statement.setString(1, cerveja_nova.getNome());
+
+        prepared_statement.setInt(2, cerveja_nova.getAno());
+
+        prepared_statement.execute();
+
+        SingletonConexao.getInstance().desconecatar();
+
     }
 
     public Cerveja buscaCervejaPorCodgio(int codigo) throws ClassNotFoundException, SQLException {
