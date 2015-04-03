@@ -8,6 +8,7 @@ package br.com.wscompany.servicos;
 import br.com.wscompany.daos.CervejaDao;
 import br.com.wscompany.modelos.Cerveja;
 import com.google.gson.Gson;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 
 /**
  *
@@ -59,8 +61,14 @@ public class CervejaService {
 
             return Response.status(Response.Status.OK).entity(json_cervejas).build();
 
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException se) {
+            
+            String error_json = new Gson().toJson(se.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+        }catch (Exception e) {
+            
+            String error_json = new Gson().toJson(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
 
     }
@@ -91,9 +99,7 @@ public class CervejaService {
 
         try {
 
-            LinkedList<Cerveja> cervejas_especificas = c_dao.retornaCervejasPorImportacao(isImportada);
-
-            String json_cerveja = new Gson().toJson(cervejas_especificas);
+            String json_cerveja = new Gson().toJson(null);
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 

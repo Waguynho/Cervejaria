@@ -13,12 +13,12 @@ public class Cerveja {
 
     private int codigo;
     private String nome;
-    private boolean importada;
+    private int ano;
 
-    public Cerveja(int codigo_cerveja, String nome, Boolean importada) {
+    public Cerveja(int codigo_cerveja, String nome, int ano) {
         this.codigo = codigo_cerveja;
         this.nome = nome;
-        this.importada = importada;
+        this.ano = ano;
     }
     /**
      * @return the codigo_cerveja
@@ -48,18 +48,9 @@ public class Cerveja {
         this.nome = nome;
     }
 
-    /**
-     * @return the importada
-     */
-    public Boolean getImportada() {
-        return importada;
+    public int getAno() {
+        return ano;
     }
 
-    /**
-     * @param importada the importada to set
-     */
-    public void setImportada(Boolean importada) {
-        this.importada = importada;
-    }
     
 }

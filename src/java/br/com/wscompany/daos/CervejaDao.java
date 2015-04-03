@@ -6,9 +6,13 @@
 package br.com.wscompany.daos;
 
 import br.com.wscompany.modelos.Cerveja;
+import br.com.wscompany.daos.PreparaResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  *
@@ -17,21 +21,46 @@ import java.util.List;
 public class CervejaDao {
 
     private static List<Cerveja> cervejas;
+    private PreparaResultSet prepara_rs;
+    private String sql;
 
     public CervejaDao() {
-
+        sql = "";
         if (cervejas == null) {
-            iniciaEstoqueCervejas();
+            cervejas = new LinkedList<Cerveja>();
         }
     }
 
-    public List<Cerveja> listarCervejas() {
+    public List<Cerveja> listarCervejas() throws ClassNotFoundException, SQLException {
+
+        sql = "SELECT cod, nome, ano FROM cervejaria.cervejas";
+
+        SingletonConexao.getInstance().conectar();
+
+        preencheCervejas(sql);
+
+        SingletonConexao.getInstance().desconecatar();
 
         return this.cervejas;
     }
-    
-    public void criarCerveja(Cerveja cerveja_nova){
-    
+
+    private void preencheCervejas(String sql) throws SQLException {
+
+        cervejas = new LinkedList<>();
+        
+        ResultSet rs = prepara_rs.obterResultSet(sql);
+
+        while (rs.next()) {
+
+            Cerveja nova_cerveja = new Cerveja(rs.getInt("cod"), rs.getString("nome"), rs.getInt("ano"));
+
+            cervejas.add(nova_cerveja);
+        }
+        rs.close();
+    }
+
+    public void criarCerveja(Cerveja cerveja_nova) {
+
         cervejas.add(cerveja_nova);
     }
 
@@ -48,28 +77,4 @@ public class CervejaDao {
         return null;
     }
 
-    public LinkedList<Cerveja> retornaCervejasPorImportacao(boolean isImportada) {
-
-        LinkedList<Cerveja> cervejas_especificas = new LinkedList<Cerveja>();
-
-        for (Cerveja cerveja : cervejas) {
-
-            if (cerveja.getImportada().equals(isImportada)) {
-
-                cervejas_especificas.add(cerveja);
-            }
-        }
-
-        return cervejas_especificas;
-    }
-
-    private void iniciaEstoqueCervejas() {
-
-        cervejas = new ArrayList<Cerveja>();
-
-        cervejas.add(new Cerveja(2004, "Heinkg", true));
-        cervejas.add(new Cerveja(1968, "Stella", false));
-        cervejas.add(new Cerveja(1997, "Humbrela", true));
-
-    }
 }
