@@ -7,9 +7,9 @@ package br.com.wscompany.servicos;
 
 import br.com.wscompany.daos.CervejaDao;
 import br.com.wscompany.modelos.Cerveja;
+import br.com.wscompany.utilitarias.Problema;
 import com.google.gson.Gson;
 import java.sql.SQLException;
-import java.util.LinkedList;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,7 +19,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 
 /**
  *
@@ -62,12 +61,12 @@ public class CervejaService {
             return Response.status(Response.Status.OK).entity(json_cervejas).build();
 
         } catch (SQLException se) {
-            
-            String error_json = new Gson().toJson(se.getMessage());
+
+            String error_json = new Gson().toJson(new Problema(se.getMessage()));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
-        }catch (Exception e) {
-            
-            String error_json = new Gson().toJson(e.getMessage());
+        } catch (Exception e) {
+
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
 
@@ -76,7 +75,7 @@ public class CervejaService {
     @GET()
     @Path("{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCerveja(@PathParam("codigo") int codigo_cerveja) {
+    public Response getCervejaPorCodigo(@PathParam("codigo") int codigo_cerveja) {
 
         try {
 
@@ -86,42 +85,46 @@ public class CervejaService {
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 
-        } catch (Exception e) {
-            return Response.status(404).build();
+        }  catch (Exception e) {
+
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
 
     }
 
     @GET()
-    @Path("/buscar")
+    @Path("/ano")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCerveja(@QueryParam("importada") boolean isImportada) {
+    public Response getCervejasPorAno(@QueryParam("valor") int valor, @QueryParam("menor") boolean isMenor, @QueryParam("maior") boolean isMaior) {
 
         try {
+            String json_cerveja = "";
 
-            String json_cerveja = new Gson().toJson(null);
+            if (isMenor == false && isMaior == false) {
+
+                json_cerveja = new Gson().toJson(c_dao.listarCervejasPorAno(valor, CervejaDao.comparador_ano.IGUAL_QUE));
+            }
+
+            if (isMenor) {
+
+                json_cerveja = new Gson().toJson(c_dao.listarCervejasPorAno(valor, CervejaDao.comparador_ano.MENOR_QUE));
+            }
+
+            if (isMaior) {
+                json_cerveja = new Gson().toJson(c_dao.listarCervejasPorAno(valor, CervejaDao.comparador_ano.MAIOR_QUE));
+            }
 
             return Response.status(Response.Status.OK).entity(json_cerveja).build();
 
+        } catch (SQLException se) {
+
+            String error_json = new Gson().toJson(new Problema(se.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         } catch (Exception e) {
-            return Response.status(404).build();
+
+            String error_json = new Gson().toJson(new Problema(e.getMessage()));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
         }
     }
-
-    @GET()
-    @Path("/teste")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCerveja(@QueryParam("nome") String nome, @QueryParam("idade") int idade) {
-
-        try {
-
-            String json_cerveja = new Gson().toJson(nome + " tem idade " + idade);
-
-            return Response.status(Response.Status.OK).entity(json_cerveja).build();
-
-        } catch (Exception e) {
-            return Response.status(404).build();
-        }
-    }
-
 }

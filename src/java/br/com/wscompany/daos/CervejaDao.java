@@ -5,13 +5,12 @@
  */
 package br.com.wscompany.daos;
 
+
 import br.com.wscompany.modelos.Cerveja;
-import br.com.wscompany.daos.PreparaResultSet;
-import java.util.ArrayList;
+import br.com.wscompany.utilitarias.PreparaResultSet;
+import br.com.wscompany.utilitarias.RetornaCervejas;
 import java.util.LinkedList;
 import java.util.List;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -24,6 +23,11 @@ public class CervejaDao {
     private PreparaResultSet prepara_rs;
     private String sql;
 
+    public enum comparador_ano {
+
+        IGUAL_QUE, MENOR_QUE, MAIOR_QUE
+    };
+
     public CervejaDao() {
         sql = "";
         if (cervejas == null) {
@@ -35,28 +39,27 @@ public class CervejaDao {
 
         sql = "SELECT cod, nome, ano FROM cervejaria.cervejas";
 
-        SingletonConexao.getInstance().conectar();
-
-        preencheCervejas(sql);
-
-        SingletonConexao.getInstance().desconecatar();
-
-        return this.cervejas;
+        return RetornaCervejas.getCervejas(sql);
     }
 
-    private void preencheCervejas(String sql) throws SQLException {
+    public List<Cerveja> listarCervejasPorAno(int ano, comparador_ano comparador_selecionado) throws ClassNotFoundException, SQLException {
 
-        cervejas = new LinkedList<>();
-        
-        ResultSet rs = prepara_rs.obterResultSet(sql);
+        if (comparador_selecionado == comparador_ano.MENOR_QUE) {
 
-        while (rs.next()) {
-
-            Cerveja nova_cerveja = new Cerveja(rs.getInt("cod"), rs.getString("nome"), rs.getInt("ano"));
-
-            cervejas.add(nova_cerveja);
+            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano < " + ano;
         }
-        rs.close();
+
+        if (comparador_selecionado == comparador_ano.MAIOR_QUE) {
+
+            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano > " + ano;
+        }
+
+        if (comparador_selecionado == comparador_ano.IGUAL_QUE) {
+
+            sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE ano = " + ano;
+        }
+
+        return RetornaCervejas.getCervejas(sql);
     }
 
     public void criarCerveja(Cerveja cerveja_nova) {
@@ -64,17 +67,11 @@ public class CervejaDao {
         cervejas.add(cerveja_nova);
     }
 
-    public Cerveja buscaCervejaPorCodgio(int codigo) {
+    public Cerveja buscaCervejaPorCodgio(int codigo) throws ClassNotFoundException, SQLException {
 
-        for (Cerveja cerveja : cervejas) {
+        sql = "SELECT cod, nome, ano FROM cervejaria.cervejas WHERE cod = " + codigo;
 
-            if (cerveja.getCodigo() == codigo) {
-
-                return cerveja;
-            }
-        }
-
-        return null;
+        return RetornaCervejas.getCervejaPorCodigo(sql);
     }
 
 }
