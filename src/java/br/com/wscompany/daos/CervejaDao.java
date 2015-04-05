@@ -37,7 +37,7 @@ public class CervejaDao {
 
     public void criarCerveja(Cerveja cerveja_nova) throws ClassNotFoundException, SQLException {
 
-        sql = "INSERT INTO cervejaria.cervejas (nome, ano) VALUES (?,?);";
+        sql = "INSERT INTO cervejaria.cervejas (nome, ano, importada) VALUES (?,?,?);";
 
         SingletonConexao.getInstance().conectar();
 
@@ -46,6 +46,8 @@ public class CervejaDao {
         prepared_statement.setString(1, cerveja_nova.getNome());
 
         prepared_statement.setInt(2, cerveja_nova.getAno());
+        
+         prepared_statement.setBoolean(3, cerveja_nova.getImportada());
 
         prepared_statement.execute();
 

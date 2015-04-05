@@ -57,7 +57,7 @@ public class Cerveja {
         this.codigo = codigo;
     }
 
-    public boolean isImportada() {
+    public boolean getImportada() {
         return importada;
     }
 
