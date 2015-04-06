@@ -47,7 +47,7 @@ public class CervejaDao {
 
         prepared_statement.setInt(2, cerveja_nova.getAno());
         
-         prepared_statement.setBoolean(3, cerveja_nova.getImportada());
+        prepared_statement.setBoolean(3, cerveja_nova.getImportada());
 
         prepared_statement.execute();
 
