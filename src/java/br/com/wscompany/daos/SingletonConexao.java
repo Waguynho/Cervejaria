@@ -42,7 +42,7 @@ public class SingletonConexao {
             Class.forName("com.mysql.jdbc.Driver");
             conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/cervejaria",
                     "wagner",
-                    "789789");
+                    "789789");            
     }
     
     public void desconecatar() throws  SQLException {

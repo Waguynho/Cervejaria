@@ -50,6 +50,7 @@ public class CervejaService {
         } catch (Exception e) {
             String error_json = new Gson().toJson(new Problema(e.getMessage()));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error_json).build();
+
         }
     }
 
@@ -114,7 +115,13 @@ public class CervejaService {
 
             String json_cervejas = new Gson().toJson(c_dao.listarCervejas());
 
-            return Response.status(Response.Status.OK).entity(json_cervejas).build();
+            return Response.status(Response.Status.OK)
+//                    .header("Access-Control-Allow-Origin", "*")
+//                    //.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+//                   // .header("Access-Control-Allow-Credentials", "true")
+//                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+//                    .header("Access-Control-Max-Age", "1209600")
+                    .entity(json_cervejas).build();
 
         } catch (SQLException se) {
 
