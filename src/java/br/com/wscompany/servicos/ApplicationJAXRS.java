@@ -5,9 +5,7 @@
  */
 package br.com.wscompany.servicos;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
@@ -18,14 +16,13 @@ import javax.ws.rs.core.Application;
 public class ApplicationJAXRS extends Application {
 
     @Override
-    public Map<String, Object> getProperties() {//Esse metodo premite que se adicione todos os serviços de um determinado 'Pacote'
+    public Set<Class<?>> getClasses() {
 
-        Map<String, Object> properties = new HashMap<>();
-
-        properties.put("jersey.config.server.provider.packages", "br.com.wscompany.servicos");
-
-        return properties;
-
+        Set<Class<?>> classes = new HashSet<>();
+        
+        classes.add(CervejaService.class);
+        
+        return classes;
     }
 
-}//Fim Classe configuração
+}
