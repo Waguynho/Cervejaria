@@ -38,9 +38,10 @@ public class SingletonConexao {
     }
 
     public void conectar() throws ClassNotFoundException, SQLException {
-        
+        //String host = "jdbc:mysql://mysql4435-ws-company.jelastic.under.com.br/cervejaria";
+        String host = "jdbc:mysql://localhost:3306/cervejaria";
             Class.forName("com.mysql.jdbc.Driver");
-            conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/cervejaria",
+            conexao = DriverManager.getConnection(host,
                     "wagner",
                     "789789");            
     }
